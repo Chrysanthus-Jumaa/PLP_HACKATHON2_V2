@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View School</title>
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/view_school.css' %}">
+</head>
+<body>
+  {% include 'sidebar.html' %}
+
+  <main class="main-content">
+    <div class="school-details-container">
+      <h2>👁️ School Overview</h2>
+      <p class="subtitle">Here’s a snapshot of <strong>{{ school.name }}</strong></p>
+
+      <section class="info-section">
+        <h3>🏫 School Info</h3>
+        <p><strong>Name:</strong> {{ school.name }}</p>
+        <p><strong>Address:</strong> {{ school.address }}</p>
+      </section>
+
+      <section class="info-section">
+        <h3>👤 Admin Info</h3>
+        <p><strong>Username:</strong> {{ admin.username }}</p>
+        <p><strong>Role:</strong> {{ admin.role }}</p>
+      </section>
+
+      <section class="info-section">
+        <h3>📊 Related Stats</h3>
+        <p><strong>Students:</strong> {{ student_count }}</p>
+        <p><strong>Fee Compliance:</strong> {{ fee_compliance }}%</p>
+        <p><strong>Recent Attendance:</strong></p>
+        <ul>
+          {% for record in recent_attendance %}
+            <li>{{ record.student.name }} - {{ record.date }} - {{ record.status }}</li>
+          {% empty %}
+            <li>No recent attendance records.</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

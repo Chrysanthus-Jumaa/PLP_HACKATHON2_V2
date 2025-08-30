@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register School</title>
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/register_school.css' %}">
+</head>
+<body>
+  {% include 'sidebar.html' %}
+
+  <main class="main-content">
+    <div class="form-container">
+      <h2>🏫 Register a New School</h2>
+      <p class="subtitle">Fill in the details to onboard a school and its admin</p>
+
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="school_name">School Name</label>
+            <input type="text" id="school_name" name="school_name" placeholder="e.g. JUMA SCHOOL OF EXCELLENCE" required>
+          </div>
+
+          <div class="form-group">
+            <label for="address">P.O Box Address</label>
+            <input type="text" id="address" name="address" placeholder="e.g. P.O Box 12345-00100" required>
+          </div>
+
+          <div class="form-group">
+            <label for="admin_username">Admin Username</label>
+            <input type="text" id="admin_username" name="admin_username" placeholder="e.g. juma_admin" required>
+          </div>
+
+          <div class="form-group">
+            <label for="admin_password">Password</label>
+            <input type="password" id="admin_password" name="admin_password" placeholder="Enter password" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required>
+          </div>
+        </div>
+
+        <button type="submit">Register School</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

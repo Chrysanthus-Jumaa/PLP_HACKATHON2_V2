@@ -1,0 +1,45 @@
+{% load static %}
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parent Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/parent_dashboard.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{ request.user.username }}</h1>
+    <h2>Your Child: {{ student.name }}</h2>
+    <nav>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="fee-summary">
+      <h3>Fee Summary</h3>
+      {% if fee %}
+        <p><strong>Term:</strong> {{ fee.term }}</p>
+        <p><strong>Amount Due:</strong> KES {{ fee.amount_due }}</p>
+        <p><strong>Amount Paid:</strong> KES {{ fee.amount_paid }}</p>
+      {% else %}
+        <p>No fee records available.</p>
+      {% endif %}
+    </section>
+
+    <section class="attendance-records">
+      <h3>Recent Attendance</h3>
+      {% if attendance %}
+        <ul>
+          {% for record in attendance %}
+            <li>{{ record.date }} — {{ record.status }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No attendance records found.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>

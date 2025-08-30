@@ -1,0 +1,73 @@
+.sidebar {
+  width: 240px;
+  background-color: #007acc;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 20px; /* Restored top padding */
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px; /* Restored spacing below school name */
+  padding: 0 20px;
+}
+
+.avatar {
+  font-size: 1.8em;
+  margin-right: 10px;
+}
+
+.school-name {
+  font-weight: bold;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu > ul > li {
+  margin-bottom: 18px;
+}
+
+
+.nav-menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  padding: 14px 20px;
+  border-radius: 0;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-menu a:hover {
+  background-color: #005fa3;
+}
+
+.submenu {
+  display: none;
+  background-color: #006bb3;
+  padding-left: 0;
+}
+
+.submenu li a {
+  padding: 12px 30px; /* Restored default submenu padding */
+}
+
+.dropdown:hover .submenu {
+  display: block;
+}
+
+.logout {
+  margin-top: auto;
+}

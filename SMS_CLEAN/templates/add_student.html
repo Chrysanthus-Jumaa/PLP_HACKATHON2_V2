@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Student</title>
+  <link rel="stylesheet" href="{% static 'css/school_admin_sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form_styles.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+
+  <main class="main-content">
+    <div class="form-container">
+      <h2>📋 Register New Student</h2>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <fieldset>
+          <legend>Student Details</legend>
+          {{ student_form.as_p }}
+        </fieldset>
+
+        <fieldset>
+          <legend>Parent Details</legend>
+          <p class="form-note">If parent details are provided, guardian info will be skipped.</p>
+          {{ parent_form.as_p }}
+        </fieldset>
+
+        <fieldset>
+          <legend>Guardian Details (if applicable)</legend>
+          {{ guardian_form.as_p }}
+        </fieldset>
+
+        <button type="submit">Register Student</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+
+<aside class="sidebar">
+  <div class="profile">
+    <div class="avatar">👑</div>
+    <div class="info">
+      <span class="username">{{ request.user.username }}</span>
+    </div>
+  </div>
+
+  <nav>
+    <ul class="nav-links">
+      <li><a href="{% url 'platform_dashboard' %}">🏠 Dashboard</a></li>
+      <li><a href="{% url 'register_school' %}">🏫 Register School</a></li>      
+      <li><a href="{% url 'manage_users' %}">👥 Manage Users</a></li>
+      <li><a href="{% url 'announcements' %}">📢 Announcements</a></li>
+      <li><a href="{% url 'settings' %}">⚙️ Settings</a></li>
+      <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+    </ul>
+  </nav>
+</aside>

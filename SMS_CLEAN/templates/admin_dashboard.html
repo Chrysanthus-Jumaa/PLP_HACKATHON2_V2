@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/school_admin_sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+
+  <main class="main-content">
+    <div class="dashboard-container">
+      <h1>{{ request.user.school.name }} Dashboard</h1>
+
+      <section class="summary-cards">
+        <div class="card">👨‍🎓 Students<br><span>{{ total_students }}</span></div>
+        <div class="card">👨‍🏫 Teachers<br><span>{{ total_teachers }}</span></div>
+        <div class="card">🧑‍🔧 Support Staff<br><span>{{ total_staff }}</span></div>
+        <div class="card">🏫 Streams<br><span>{{ total_streams }}</span></div>
+        <div class="card">🏠 Classrooms<br><span>{{ total_classrooms }}</span></div>
+        <div class="card">📅 Weekly Attendance<br><span>{{ weekly_attendance_avg }}%</span></div>
+      </section>
+
+      <section class="charts">
+        <div class="chart-box">
+          <h2>Gender Distribution</h2>
+          <canvas id="genderChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <h2>Weekly Attendance</h2>
+          <canvas id="attendanceChart"></canvas>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const genderChart = new Chart(document.getElementById('genderChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Boys', 'Girls'],
+        datasets: [{
+          label: 'Students',
+          data: [{{ boys_count }}, {{ girls_count }}],
+          backgroundColor: ['#007acc', '#ff4081']
+        }]
+      }
+    });
+
+    const attendanceChart = new Chart(document.getElementById('attendanceChart'), {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        datasets: [{
+          label: 'Attendance (%)',
+          data: [{{ mon_attendance }}, {{ tue_attendance }}, {{ wed_attendance }}, {{ thu_attendance }}, {{ fri_attendance }}],
+          borderColor: '#007acc',
+          fill: false,
+          tension: 0.3
+        }]
+      }
+    });
+  </script>
+</body>
+</html>

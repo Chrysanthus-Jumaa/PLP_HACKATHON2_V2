@@ -1,0 +1,41 @@
+{% load static %}
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Record Attendance</title>
+  <link rel="stylesheet" href="{% static 'css/attendance_form.css' %}">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Record Attendance</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <label for="student_id">Select Student</label>
+      <select id="student_id" name="student_id" required>
+        <option value="">-- Choose a Student --</option>
+        {% for student in students %}
+          <option value="{{ student.id }}">{{ student.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="status">Status</label>
+      <select id="status" name="status" required>
+        <option value="">-- Select Status --</option>
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+      </select>
+
+      <button type="submit">Record Attendance</button>
+    </form>
+
+    <a href="{% url 'teacher_dashboard' %}" class="back-link">← Back to Dashboard</a>
+  </div>
+</body>
+</html>

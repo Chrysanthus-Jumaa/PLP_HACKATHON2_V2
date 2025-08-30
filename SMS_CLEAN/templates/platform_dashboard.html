@@ -1,0 +1,88 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Platform Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/platform_dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+</head>
+<body>
+  <div class="layout-grid">
+    {% include 'sidebar.html' %}
+
+    <main class="main-content">
+      <h1>🎓 Platform Admin Dashboard</h1>
+      <p class="subtitle">Welcome, {{ request.user.username }}. You're overseeing {{ schools.count }} schools.</p>
+
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <h3>Total Schools</h3>
+          <p>{{ schools.count }}</p>
+        </div>
+        <div class="metric-card">
+          <h3>Total Students</h3>
+          <p>{{ total_students }}</p>
+        </div>
+        <div class="metric-card">
+          <h3>Active Teachers</h3>
+          <p>{{ total_teachers }}</p>
+        </div>
+        <div class="metric-card">
+          <h3>Fee Compliance</h3>
+          <p>{{ fee_compliance }}%</p>
+        </div>
+      </section>
+
+      <section class="school-table-section">
+        <h2>📋 Registered Schools</h2>
+        {% if schools %}
+          <div class="table-scroll-wrapper">
+            <table class="school-table">
+              <thead>
+                <tr>
+                  <th>School Name</th>
+                  <th>Address</th>
+                  <th>Admin</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for school in schools %}
+                  <tr>
+                    <td>{{ school.name }}</td>
+                    <td>{{ school.address }}</td>
+                    {% with school_admins|dict_get:school.id as admin %}
+                      <td>{{ admin.username }}</td>
+                    {% endwith %}
+                    <td class="actions">
+                      <a href="{% url 'view_school' school.id %}" title="View">
+                        👁️
+                      </a>
+                      <a href="{% url 'edit_school' school.id %}" title="Edit">✏️</a>
+
+                      <a href="javascript:void(0);" onclick="confirmDelete({{ school.id }})" title="Delete">🗑️</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p>No schools registered yet.</p>
+        {% endif %}
+      </section>
+    </main>
+  </div>
+  <script>
+    function confirmDelete(schoolId) {
+      if (confirm("Are you sure you want to delete this school?")) {
+        window.location.href = `/delete_school/${schoolId}/`;
+      }
+    }
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/school_admin_sidebar.css' %}">
+<aside class="sidebar">
+  <div class="profile">
+    <div class="avatar">🏫</div>
+    <div class="info">
+      <span class="school-name">{{ request.user.school.name }}</span>
+    </div>
+  </div>
+
+  <nav class="nav-menu">
+    <ul>
+      <li><a href="{% url 'dashboard' %}">🏠 Dashboard</a></li>
+
+      <li class="dropdown">
+        <a href="#">👨‍🎓 Students</a>
+        <ul class="submenu">
+          <li><a href="{% url 'manage_students' %}">Manage Students</a></li>
+          <li><a href="{% url 'add_student' %}">Add Student</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <a href="#">👨‍🏫 Teachers</a>
+        <ul class="submenu">
+          <li><a href="{% url 'manage_teachers' %}">Manage Teachers</a></li>
+          <li><a href="{% url 'add_teacher' %}">Add Teacher</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <a href="#">🧑‍🔧 Support Staff</a>
+        <ul class="submenu">
+          <li><a href="{% url 'manage_staff' %}">Manage Staff</a></li>
+          <li><a href="{% url 'add_staff' %}">Add Staff</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <a href="#">🏫 Classes</a>
+        <ul class="submenu">
+          <li><a href="{% url 'manage_classes' %}">Manage Classes</a></li>
+          <li><a href="{% url 'add_class' %}">Add Class</a></li>
+        </ul>
+      </li>
+
+      <li class="logout">
+        <a href="{% url 'logout' %}">🚪 Logout</a>
+      </li>
+    </ul>
+  </nav>
+</aside>

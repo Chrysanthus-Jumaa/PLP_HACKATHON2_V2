@@ -1,0 +1,58 @@
+{% load static %}
+<!-- {% include 'navbar.html' %} -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | School Management System</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+  <div class="login-container">
+    <h2>🔐 Welcome Back</h2>
+    <p class="subtitle">Log in to access your dashboard</p>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" class="login-form">
+      {% csrf_token %}
+
+      <div class="input-group">
+        <label for="username">👤 Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">🔒 Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+
+      <div class="input-group">
+        <label for="role">🎓 Role</label>
+        <select id="role" name="role" required>
+          <option value="">Select your role</option>
+          <option value="admin">Admin</option>
+          <option value="teacher">Teacher</option>
+          <option value="parent">Parent</option>
+          <option value="platform_admin">Platform Admin</option>
+        </select>
+      </div>
+
+      <div class="input-group remember-wrap">
+        <label class="remember-me">
+          <input type="checkbox" name="remember"> Remember Me
+        </label>
+      </div>
+
+      <div class="input-group">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+
+
+    <a href="#" class="reset-link">Forgot Password?</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% load static %}
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/teacher_dashboard.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{ request.user.username }}</h1>
+    <nav>
+      <a href="{% url 'record_attendance' %}">Record Attendance</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="lesson-form">
+      <h2>Create Lesson Plan</h2>
+      <form method="POST">
+        {% csrf_token %}
+
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" placeholder="Lesson Title" required>
+
+        <label for="content">Content</label>
+        <textarea id="content" name="content" placeholder="Lesson content" required></textarea>
+
+        <button type="submit">Save</button>
+      </form>
+    </section>
+
+    <section class="lesson-list">
+      <h2>Your Lesson Plans</h2>
+      {% if plans %}
+        <ul>
+          {% for plan in plans %}
+            <li><strong>{{ plan.title }}</strong> — {{ plan.created_at|date:"M d, Y" }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No lesson plans created yet.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>
