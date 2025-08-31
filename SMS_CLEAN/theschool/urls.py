@@ -36,10 +36,6 @@ urlpatterns = [
     path('manage_staff/', views.manage_staff, name='manage_staff'),
     path('add_staff/', views.add_staff, name='add_staff'),
 
-    # Classes
-    path('manage_classes/', views.manage_classes, name='manage_classes'),
-    path('add_class/', views.add_class, name='add_class'),
-
 
     # Admin Actions
     path('add_student/', views.add_student, name='add_student'),

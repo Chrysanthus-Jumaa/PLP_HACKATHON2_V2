@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     School, User, Stream, Student, ParentDetails, GuardianDetails,
     Attendance, FeeRecord, LessonPlan, PlatformConfig,
-    Teacher, SupportStaff, ClassRoom
+    Teacher, SupportStaff
 )
 
 admin.site.register(School)
@@ -17,4 +17,3 @@ admin.site.register(LessonPlan)
 admin.site.register(PlatformConfig)
 admin.site.register(Teacher)
 admin.site.register(SupportStaff)
-admin.site.register(ClassRoom)

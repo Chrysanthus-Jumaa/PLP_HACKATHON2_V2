@@ -8,7 +8,7 @@ from django.db import transaction
 
 from .models import (
     School, Student, Attendance, User, Teacher, SupportStaff,
-    Stream, ClassRoom, FeeRecord, LessonPlan, PlatformConfig,ParentDetails,GuardianDetails
+    Stream, FeeRecord, LessonPlan, PlatformConfig,ParentDetails,GuardianDetails
 )
 from .utils import send_sms
 
@@ -75,7 +75,6 @@ def dashboard(request):
         'total_teachers': Teacher.objects.filter(school=user.school).count(),
         'total_staff': SupportStaff.objects.filter(school=user.school).count(),
         'total_streams': Stream.objects.filter(school=user.school).count(),
-        'total_classrooms': ClassRoom.objects.filter(school=user.school).count(),
         'boys_count': Student.objects.filter(school=user.school, gender='Male').count(),
         'girls_count': Student.objects.filter(school=user.school, gender='Female').count(),
         'mon_attendance': get_attendance_percent(user.school, 'Monday'),
@@ -422,17 +421,6 @@ def add_staff(request):
         return redirect('dashboard')
     return render(request, 'school_admin/add_staff.html')
 
-@login_required
-def manage_classes(request):
-    if request.user.role != 'admin':
-        return redirect('dashboard')
-    return render(request, 'school_admin/manage_classes.html')
-
-@login_required
-def add_class(request):
-    if request.user.role != 'admin':
-        return redirect('dashboard')
-    return render(request, 'school_admin/add_class.html')
 
 @login_required
 def view_student(request, student_id):
