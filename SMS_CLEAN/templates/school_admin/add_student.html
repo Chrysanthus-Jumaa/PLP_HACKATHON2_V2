@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register New Student</title>
+  <link rel="stylesheet" href="{% static 'css/form_styles.css' %}">
+</head>
+<body>
+
+  <div class="layout">
+    {% include 'school_admin_sidebar.html' %}
+
+    <div class="main-content">
+      <div class="form-container">
+        <h2>Register New Student</h2>
+
+        {% if error %}
+          <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <fieldset>
+            <legend>Student Details</legend>
+            <label>First Name:</label>
+            <input type="text" name="first_name" required>
+
+            <label>Last Name:</label>
+            <input type="text" name="last_name" required>
+
+            <label>Date of Birth:</label>
+            <input type="date" name="date_of_birth" required>
+
+            <label>Gender:</label>
+            <select name="gender" required>
+              <option value="">--Select--</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+
+            <label>Religion:</label>
+            <select name="religion" required>
+              <option value="">--Select--</option>
+              <option value="Christian">Christian</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <label>Grade:</label>
+            <select name="grade" required>
+              <option value="">--Select--</option>
+              <option value="Grade 1">Grade 1</option>
+              <option value="Grade 2">Grade 2</option>
+              <option value="Grade 3">Grade 3</option>
+              <option value="Grade 4">Grade 4</option>
+              <option value="Grade 5">Grade 5</option>
+              <option value="Grade 6">Grade 6</option>
+            </select>
+
+            <label>Stream:</label>
+            <input type="text" name="stream_name" required>
+
+            <label>Passport Photo:</label>
+            <input type="file" name="passport_photo">
+          </fieldset>
+
+          <fieldset>
+            <legend>Parent Details</legend>
+            <label>Father's Name:</label>
+            <input type="text" name="father_name">
+
+            <label>Father's Phone:</label>
+            <input type="text" name="father_phone">
+
+            <label>Father's Occupation:</label>
+            <input type="text" name="father_occupation">
+
+            <label>Mother's Name:</label>
+            <input type="text" name="mother_name">
+
+            <label>Mother's Phone:</label>
+            <input type="text" name="mother_phone">
+
+            <label>Mother's Occupation:</label>
+            <input type="text" name="mother_occupation">
+          </fieldset>
+
+          <fieldset>
+            <legend>Guardian Details (if no parent info)</legend>
+            <label>Full Name:</label>
+            <input type="text" name="full_name">
+
+            <label>Phone:</label>
+            <input type="text" name="phone">
+
+            <label>Occupation:</label>
+            <input type="text" name="occupation">
+          </fieldset>
+
+          <button type="submit">Register Student</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

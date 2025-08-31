@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Student</title>
+  <link rel="stylesheet" href="{% static 'css/view_student.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+
+  <main class="main-content">
+    <div class="student-profile">
+      <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+
+      <div class="profile-section">
+        {% if student.passport_photo %}
+          <img src="{{ student.passport_photo.url }}" alt="Passport Photo" class="profile-pic">
+        {% else %}
+          <span class="no-photo">No Photo Available</span>
+        {% endif %}
+      </div>
+
+      <ul class="student-details">
+        <li><strong>Registration Number:</strong> {{ student.registration_number }}</li>
+        <li><strong>Date of Birth:</strong> {{ student.date_of_birth }}</li>
+        <li><strong>Gender:</strong> {{ student.gender }}</li>
+        <li><strong>Religion:</strong> {{ student.religion }}</li>
+        <li><strong>Grade:</strong> {{ student.grade }}</li>
+        <li><strong>Stream:</strong> {{ student.stream.name }}</li>
+      </ul>
+
+      {% if student.parentdetails %}
+        <div class="relation-block">
+          <h3>👨‍👩‍👧 Parent Details</h3>
+          <ul class="relation-details">
+            <li><strong>Father's Name:</strong> {{ student.parentdetails.father_name }}</li>
+            <li><strong>Father's Phone:</strong> {{ student.parentdetails.father_phone }}</li>
+            <li><strong>Father's Occupation:</strong> {{ student.parentdetails.father_occupation }}</li>
+            <li><strong>Mother's Name:</strong> {{ student.parentdetails.mother_name }}</li>
+            <li><strong>Mother's Phone:</strong> {{ student.parentdetails.mother_phone }}</li>
+            <li><strong>Mother's Occupation:</strong> {{ student.parentdetails.mother_occupation }}</li>
+          </ul>
+        </div>
+      {% elif student.guardiandetails %}
+        <div class="relation-block">
+          <h3>🧑‍🦱 Guardian Details</h3>
+          <ul class="relation-details">
+            <li><strong>Full Name:</strong> {{ student.guardiandetails.full_name }}</li>
+            <li><strong>Phone:</strong> {{ student.guardiandetails.phone }}</li>
+            <li><strong>Occupation:</strong> {{ student.guardiandetails.occupation }}</li>
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+</body>
+</html>

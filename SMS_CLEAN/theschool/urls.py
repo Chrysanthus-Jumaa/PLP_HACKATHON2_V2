@@ -23,6 +23,10 @@ urlpatterns = [
     # Students
     path('manage_students/', views.manage_students, name='manage_students'),
     path('add_student/', views.add_student, name='add_student'),
+    path('student/<int:student_id>/', views.view_student, name='view_student'),
+    path('student/<int:student_id>/edit/', views.edit_student, name='edit_student'),
+    path('student/<int:student_id>/delete/', views.delete_student, name='delete_student'),
+
 
     # Teachers
     path('manage_teachers/', views.manage_teachers, name='manage_teachers'),

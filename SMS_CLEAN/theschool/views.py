@@ -3,12 +3,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.utils import timezone
+from django.db import transaction
+
 
 from .models import (
     School, Student, Attendance, User, Teacher, SupportStaff,
-    Stream, ClassRoom, FeeRecord, LessonPlan, PlatformConfig
+    Stream, ClassRoom, FeeRecord, LessonPlan, PlatformConfig,ParentDetails,GuardianDetails
 )
-from .forms import StudentRegistrationForm, ParentDetailsForm, GuardianDetailsForm
 from .utils import send_sms
 
 # ----------------------------
@@ -277,45 +278,60 @@ def announcements_view(request):
 # Student Management
 # ----------------------------
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from .models import Student, Stream
+
 @login_required
 def add_student(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
 
     if request.method == 'POST':
-        student_form = StudentRegistrationForm(request.POST, request.FILES)
-        parent_form = ParentDetailsForm(request.POST)
-        guardian_form = GuardianDetailsForm(request.POST)
+        try:
+            with transaction.atomic():
+                stream_name = request.POST.get('stream_name')
+                stream, _ = Stream.objects.get_or_create(name=stream_name, school=request.user.school)
 
-        if student_form.is_valid():
-            student = student_form.save(commit=False)
-            student.school = request.user.school
-            student.save()
+                student = Student.objects.create(
+                    first_name=request.POST.get('first_name'),
+                    last_name=request.POST.get('last_name'),
+                    date_of_birth=request.POST.get('date_of_birth'),
+                    gender=request.POST.get('gender'),
+                    religion=request.POST.get('religion'),
+                    grade=request.POST.get('grade'),
+                    passport_photo=request.FILES.get('passport_photo'),
+                    school=request.user.school,
+                    stream=stream
+                )
 
-            parent_data = parent_form.cleaned_data
-            guardian_data = guardian_form.cleaned_data
+                if request.POST.get('father_name') or request.POST.get('mother_name'):
+                    ParentDetails.objects.create(
+                        student=student,
+                        father_name=request.POST.get('father_name'),
+                        father_phone=request.POST.get('father_phone'),
+                        father_occupation=request.POST.get('father_occupation'),
+                        mother_name=request.POST.get('mother_name'),
+                        mother_phone=request.POST.get('mother_phone'),
+                        mother_occupation=request.POST.get('mother_occupation')
+                    )
+                elif request.POST.get('full_name'):
+                    GuardianDetails.objects.create(
+                        student=student,
+                        full_name=request.POST.get('full_name'),
+                        phone=request.POST.get('phone'),
+                        occupation=request.POST.get('occupation')
+                    )
 
-            if parent_form.is_valid() and any(parent_data.values()):
-                parent = parent_form.save(commit=False)
-                parent.student = student
-                parent.save()
-            elif guardian_form.is_valid() and any(guardian_data.values()):
-                guardian = guardian_form.save(commit=False)
-                guardian.student = student
-                guardian.save()
+                return redirect('manage_students')
 
-            return redirect('manage_students')
+        except Exception as e:
+            return render(request, 'school_admin/add_student.html', {
+                'error': f"Failed to register student: {str(e)}"
+            })
 
-    else:
-        student_form = StudentRegistrationForm()
-        parent_form = ParentDetailsForm()
-        guardian_form = GuardianDetailsForm()
-
-    return render(request, 'school_admin/add_student.html', {
-        'student_form': student_form,
-        'parent_form': parent_form,
-        'guardian_form': guardian_form
-    })
+    return render(request, 'school_admin/add_student.html')
 
 @login_required
 def manage_students(request):
@@ -417,3 +433,49 @@ def add_class(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
     return render(request, 'school_admin/add_class.html')
+
+@login_required
+def view_student(request, student_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    student = get_object_or_404(Student, id=student_id, school=request.user.school)
+    return render(request, 'school_admin/view_student.html', {'student': student})
+
+@login_required
+def edit_student(request, student_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+
+    student = get_object_or_404(Student, id=student_id, school=request.user.school)
+    grades = ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6"]
+
+    if request.method == 'POST':
+        student.first_name = request.POST.get('first_name')
+        student.last_name = request.POST.get('last_name')
+        student.date_of_birth = request.POST.get('date_of_birth')
+        student.gender = request.POST.get('gender')
+        student.religion = request.POST.get('religion')
+        student.grade = request.POST.get('grade')
+
+        stream_name = request.POST.get('stream_name')
+        stream, _ = Stream.objects.get_or_create(name=stream_name, school=request.user.school)
+        student.stream = stream
+
+        if request.FILES.get('passport_photo'):
+            student.passport_photo = request.FILES.get('passport_photo')
+
+        student.save()
+        return redirect('manage_students')
+
+    return render(request, 'school_admin/edit_student.html', {
+        'student': student,
+        'grades': grades
+    })
+
+@login_required
+def delete_student(request, student_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    student = get_object_or_404(Student, id=student_id, school=request.user.school)
+    student.delete()
+    return redirect('manage_students')
