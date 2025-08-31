@@ -476,6 +476,13 @@ def edit_student(request, student_id):
 def delete_student(request, student_id):
     if request.user.role != 'admin':
         return redirect('dashboard')
+
     student = get_object_or_404(Student, id=student_id, school=request.user.school)
+    stream = student.stream
     student.delete()
+
+    # If no other students are using this stream, delete it
+    if not Student.objects.filter(stream=stream).exists():
+        stream.delete()
+
     return redirect('manage_students')
