@@ -401,13 +401,57 @@ def notify_parent_fee(student_id):
 def manage_teachers(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
-    return render(request, 'school_admin/manage_teachers.html')
+    teachers = Teacher.objects.filter(school=request.user.school)
+    return render(request, 'school_admin/manage_teachers.html', {'teachers': teachers})
 
 @login_required
 def add_teacher(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
+    if request.method == 'POST':
+        teacher = Teacher(
+            school=request.user.school,
+            first_name=request.POST.get('first_name'),
+            last_name=request.POST.get('last_name'),
+            national_id=request.POST.get('national_id'),
+            subjects=request.POST.get('subjects')
+        )
+        if request.FILES.get('profile_photo'):
+            teacher.profile_photo = request.FILES.get('profile_photo')
+        teacher.save()
+        return redirect('manage_teachers')
     return render(request, 'school_admin/add_teacher.html')
+
+@login_required
+def edit_teacher(request, teacher_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    teacher = get_object_or_404(Teacher, id=teacher_id, school=request.user.school)
+    if request.method == 'POST':
+        teacher.first_name = request.POST.get('first_name')
+        teacher.last_name = request.POST.get('last_name')
+        teacher.national_id = request.POST.get('national_id')
+        teacher.subjects = request.POST.get('subjects')
+        if request.FILES.get('profile_photo'):
+            teacher.profile_photo = request.FILES.get('profile_photo')
+        teacher.save()
+        return redirect('manage_teachers')
+    return render(request, 'school_admin/edit_teacher.html', {'teacher': teacher})
+
+@login_required
+def view_teacher(request, teacher_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    teacher = get_object_or_404(Teacher, id=teacher_id, school=request.user.school)
+    return render(request, 'school_admin/view_teacher.html', {'teacher': teacher})
+
+@login_required
+def delete_teacher(request, teacher_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    teacher = get_object_or_404(Teacher, id=teacher_id, school=request.user.school)
+    teacher.delete()
+    return redirect('manage_teachers')
 
 @login_required
 def manage_staff(request):

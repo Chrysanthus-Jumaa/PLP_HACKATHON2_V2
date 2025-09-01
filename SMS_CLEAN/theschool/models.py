@@ -117,12 +117,24 @@ class PlatformConfig(models.Model):
         return self.platform_name
 
 class Teacher(models.Model):
-    name = models.CharField(max_length=100)
-    subject = models.CharField(max_length=100)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, default='John')
+    last_name = models.CharField(max_length=100, default='Doe')
+    national_id = models.CharField(max_length=20, default='00000000')
+    teacher_id = models.CharField(max_length=20, unique=True, editable=False, default='TEMP-TID')
+    profile_photo = models.ImageField(upload_to='teacher_photos/', blank=True, null=True)
+    subjects = models.CharField(max_length=255, default='General Studies')  # Comma-separated list
+
+    def save(self, *args, **kwargs):
+        if not self.teacher_id or self.teacher_id == 'TEMP-TID':
+            initials = self.first_name[0] + self.last_name[0]
+            count = Teacher.objects.filter(school=self.school).count() + 1
+            self.teacher_id = f"T{initials.upper()}{self.school.id:03d}{count:04d}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name} ({self.teacher_id})"
+
 
 class SupportStaff(models.Model):
     name = models.CharField(max_length=100)

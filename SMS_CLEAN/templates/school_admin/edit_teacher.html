@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Teacher</title>
+  <link rel="stylesheet" href="{% static 'css/edit_teacher.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+  <main class="main-content">
+    <div class="form-container">
+      <h2>Edit Teacher Details</h2>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>First Name:</label>
+        <input type="text" name="first_name" value="{{ teacher.first_name }}" required>
+
+        <label>Last Name:</label>
+        <input type="text" name="last_name" value="{{ teacher.last_name }}" required>
+
+        <label>National ID:</label>
+        <input type="text" name="national_id" value="{{ teacher.national_id }}" required>
+
+        <label>Subjects:</label>
+        <input type="text" name="subjects" value="{{ teacher.subjects }}" required>
+
+        <label>Passport Photo:</label>
+        <input type="file" name="profile_photo">
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

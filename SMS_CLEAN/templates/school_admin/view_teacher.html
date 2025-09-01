@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Teacher</title>
+  <link rel="stylesheet" href="{% static 'css/view_teacher.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+  <main class="main-content">
+    <div class="teacher-profile">
+      <h2>{{ teacher.first_name }} {{ teacher.last_name }}</h2>
+      <div class="profile-section">
+        {% if teacher.profile_photo %}
+          <img src="{{ teacher.profile_photo.url }}" class="profile-pic">
+        {% else %}
+          <span class="no-photo">No Photo Available</span>
+        {% endif %}
+      </div>
+      <ul class="teacher-details">
+        <li><strong>Teacher ID:</strong> {{ teacher.teacher_id }}</li>
+        <li><strong>National ID:</strong> {{ teacher.national_id }}</li>
+        <li><strong>Subjects:</strong> {{ teacher.subjects }}</li>
+      </ul>
+    </div>
+  </main>
+</body>
+</html>
