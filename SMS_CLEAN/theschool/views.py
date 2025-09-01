@@ -457,13 +457,69 @@ def delete_teacher(request, teacher_id):
 def manage_staff(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
-    return render(request, 'school_admin/manage_staff.html')
+    staff = SupportStaff.objects.filter(school=request.user.school)
+    return render(request, 'school_admin/manage_support_staff.html', {'staff': staff})
 
 @login_required
 def add_staff(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
-    return render(request, 'school_admin/add_staff.html')
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        role = request.POST.get('role')
+        national_id = request.POST.get('national_id')
+        profile_photo = request.FILES.get('profile_photo')
+
+        # Generate working ID
+        initials = ''.join([part[0] for part in name.split() if part])[:2].upper()
+        count = SupportStaff.objects.filter(school=request.user.school).count() + 1
+        school_id = f"{request.user.school.id:03d}"
+        working_id = f"S{initials}{school_id}{count:04d}"
+
+        member = SupportStaff(
+            school=request.user.school,
+            name=name,
+            role=role,
+            national_id=national_id,
+            working_id=working_id,
+            profile_photo=profile_photo
+        )
+        member.save()
+        return redirect('manage_staff')
+
+    return render(request, 'school_admin/add_support_staff.html')
+
+@login_required
+def edit_staff(request, staff_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    staff = get_object_or_404(SupportStaff, id=staff_id, school=request.user.school)
+    if request.method == 'POST':
+        staff.name = request.POST.get('name')
+        staff.role = request.POST.get('role')
+        staff.national_id = request.POST.get('national_id')
+        if request.FILES.get('profile_photo'):
+            staff.profile_photo = request.FILES.get('profile_photo')
+        staff.save()
+        return redirect('manage_staff')
+    return render(request, 'school_admin/edit_support_staff.html', {'staff': staff})
+
+@login_required
+def view_staff(request, staff_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    staff = get_object_or_404(SupportStaff, id=staff_id, school=request.user.school)
+    return render(request, 'school_admin/view_support_staff.html', {'staff': staff})
+
+@login_required
+def delete_staff(request, staff_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    staff = get_object_or_404(SupportStaff, id=staff_id, school=request.user.school)
+    staff.delete()
+    return redirect('manage_staff')
+
 
 
 @login_required

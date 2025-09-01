@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Support Staff</title>
+  <link rel="stylesheet" href="{% static 'css/view_support_staff.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+  <main class="main-content">
+    <div class="staff-profile">
+      <h2>{{ staff.name }}</h2>
+      <div class="profile-section">
+        {% if staff.profile_photo %}
+          <img src="{{ staff.profile_photo.url }}" class="profile-pic">
+        {% else %}
+          <span class="no-photo">No Photo Available</span>
+        {% endif %}
+      </div>
+      <ul class="staff-details">
+        <li><strong>Working ID:</strong> {{ staff.working_id }}</li>
+        <li><strong>National ID:</strong> {{ staff.national_id }}</li>
+        <li><strong>Role:</strong> {{ staff.role }}</li>
+      </ul>
+    </div>
+  </main>
+</body>
+</html>

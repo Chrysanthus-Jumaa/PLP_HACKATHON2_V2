@@ -39,6 +39,10 @@ urlpatterns = [
     # Support Staff
     path('manage_staff/', views.manage_staff, name='manage_staff'),
     path('add_staff/', views.add_staff, name='add_staff'),
+    path('view_staff/<int:staff_id>/', views.view_staff, name='view_staff'),
+    path('edit_staff/<int:staff_id>/', views.edit_staff, name='edit_staff'),
+    path('delete_staff/<int:staff_id>/', views.delete_staff, name='delete_staff'),
+
 
 
     # Admin Actions

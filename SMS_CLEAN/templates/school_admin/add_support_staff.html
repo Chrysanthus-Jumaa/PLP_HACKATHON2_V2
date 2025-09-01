@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Support Staff</title>
+  <link rel="stylesheet" href="{% static 'css/add_support_staff.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+  <main class="main-content">
+    <div class="form-container">
+      <h2>Register Support Staff</h2>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Name:</label>
+        <input type="text" name="name" required>
+
+        <label>Role:</label>
+        <input type="text" name="role" required>
+
+        <label>National ID:</label>
+        <input type="text" name="national_id" required>
+
+        <label>Passport Photo:</label>
+        <input type="file" name="profile_photo">
+
+        <button type="submit">Add Staff</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

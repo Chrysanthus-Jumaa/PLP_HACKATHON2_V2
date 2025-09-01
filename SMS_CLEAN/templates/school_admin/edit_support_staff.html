@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Support Staff</title>
+  <link rel="stylesheet" href="{% static 'css/edit_support_staff.css' %}">
+</head>
+<body>
+  {% include 'school_admin_sidebar.html' %}
+  <main class="main-content">
+    <div class="form-container">
+      <h2>Edit Staff Details</h2>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Name:</label>
+        <input type="text" name="name" value="{{ staff.name }}" required>
+
+        <label>Role:</label>
+        <input type="text" name="role" value="{{ staff.role }}" required>
+
+        <label>National ID:</label>
+        <input type="text" name="national_id" value="{{ staff.national_id }}" required>
+
+        <label>Passport Photo:</label>
+        <input type="file" name="profile_photo">
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
