@@ -4,6 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.utils import timezone
 from django.db import transaction
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from .models import Student, Teacher
+from .ai_utils import generate_insight
+from .chatbot_utils import get_chatbot_reply
+from .stats_utils import weekly_attendance_for_school
 
 
 from .models import (
@@ -574,3 +582,64 @@ def delete_student(request, student_id):
         stream.delete()
 
     return redirect('manage_students')
+@login_required
+def admin_dashboard(request):
+    # restrict to only school admins in your app if you have that flag
+    school = getattr(request.user, "school", None)
+
+    # counts (defensive)
+    try:
+        total_students = Student.objects.filter(school=school).count()
+    except Exception:
+        total_students = Student.objects.count()
+
+    try:
+        total_teachers = Teacher.objects.filter(school=school).count()
+    except Exception:
+        total_teachers = Teacher.objects.count()
+
+    # gender counts (try common field names)
+    try:
+        boys_count = Student.objects.filter(school=school, gender__iexact="M").count()
+        girls_count = Student.objects.filter(school=school, gender__iexact="F").count()
+    except Exception:
+        boys_count = 0
+        girls_count = 0
+
+    # attendance stats
+    att_stats = weekly_attendance_for_school(school)
+
+    # create ai insight
+    stats_for_ai = {
+        "total_students": total_students,
+        "total_teachers": total_teachers,
+        "boys": boys_count,
+        "girls": girls_count,
+        **att_stats
+    }
+    ai = generate_insight(stats_for_ai)
+    ai_message = ai["message"]
+
+    context = {
+        "total_students": total_students,
+        "total_teachers": total_teachers,
+        "boys_count": boys_count,
+        "girls_count": girls_count,
+        "mon_attendance": att_stats.get("mon", 0),
+        "tue_attendance": att_stats.get("tue", 0),
+        "wed_attendance": att_stats.get("wed", 0),
+        "thu_attendance": att_stats.get("thu", 0),
+        "fri_attendance": att_stats.get("fri", 0),
+        "weekly_attendance_avg": att_stats.get("weekly_attendance_avg", 0),
+        "ai_message": ai_message,
+    }
+    return render(request, "admin_dashboard.html", context)
+
+
+# Chatbot endpoint for admin widget (requires login)
+@require_POST
+@login_required
+def chatbot_reply(request):
+    message = request.POST.get("message", "")
+    reply = get_chatbot_reply(message, request.user)
+    return JsonResponse({"reply": reply})

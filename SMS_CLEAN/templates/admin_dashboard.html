@@ -21,6 +21,9 @@
         <div class="card">🧑‍🔧 Support Staff<br><span>{{ total_staff }}</span></div>
         <div class="card">🏫 Streams<br><span>{{ total_streams }}</span></div>
         <div class="card">📅 Weekly Attendance<br><span>{{ weekly_attendance_avg }}%</span></div>
+    
+</div>
+
       </section>
 
       <section class="charts">
@@ -34,35 +37,118 @@
           <canvas id="attendanceChart"></canvas>
         </div>
       </section>
+      <section class="chart-box">
+  <h2>🤖 AI Insights</h2>
+  <ul>
+    {% for insight in insights %}
+      <li>{{ insight }}</li>
+    {% endfor %}
+  </ul>
+  <p><strong>📊 Next Week Forecast:</strong> {{ next_week_forecast }}% attendance expected</p>
+</section>
     </div>
+
+</div>
+    <!-- Chatbot widget -->
+<div id="ai-chatbot" style="position:fixed;bottom:20px;right:20px;width:320px;z-index:9999;">
+  <div style="background:#ffffff;padding:10px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.12);">
+    <div id="chat-messages" style="height:220px;overflow:auto;padding:6px;font-size:0.95em;"></div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input id="chat-input" type="text" placeholder="Ask AI about attendance, fees or totals..." style="flex:1;padding:8px;border:1px solid #ddd;border-radius:6px;">
+      <button id="chat-send" style="padding:8px 10px;border-radius:6px;background:#007acc;color:#fff;border:none;">Send</button>
+    </div>
+  </div>
   </main>
 
+  <script id="gender-data" type="application/json">{"boys": {{ boys_count|default:0 }}, "girls": {{ girls_count|default:0 }}}</script>
+  <script id="attendance-data" type="application/json">{"mon": {{ mon_attendance|default:0 }}, "tue": {{ tue_attendance|default:0 }}, "wed": {{ wed_attendance|default:0 }}, "thu": {{ thu_attendance|default:0 }}, "fri": {{ fri_attendance|default:0 }}}</script>
   <script>
+    const genderData = JSON.parse(document.getElementById('gender-data').textContent);
+    const attendanceData = JSON.parse(document.getElementById('attendance-data').textContent);
     const genderChart = new Chart(document.getElementById('genderChart'), {
       type: 'bar',
       data: {
         labels: ['Boys', 'Girls'],
         datasets: [{
           label: 'Students',
-          data: [{{ boys_count }}, {{ girls_count }}],
+          data: [genderData.boys, genderData.girls],
           backgroundColor: ['#007acc', '#ff4081']
         }]
       }
     });
-
     const attendanceChart = new Chart(document.getElementById('attendanceChart'), {
       type: 'line',
       data: {
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
         datasets: [{
           label: 'Attendance (%)',
-          data: [{{ mon_attendance }}, {{ tue_attendance }}, {{ wed_attendance }}, {{ thu_attendance }}, {{ fri_attendance }}],
+          data: [attendanceData.mon, attendanceData.tue, attendanceData.wed, attendanceData.thu, attendanceData.fri],
           borderColor: '#007acc',
           fill: false,
           tension: 0.3
         }]
       }
     });
+// csrf token helper from Django docs
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+const sendBtn = document.getElementById("chat-send");
+const input = document.getElementById("chat-input");
+const messages = document.getElementById("chat-messages");
+
+function appendMessage(who, text) {
+  const el = document.createElement("div");
+  el.style.marginBottom = "8px";
+  el.innerHTML = `<strong>${who}:</strong> ${text}`;
+  messages.appendChild(el);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+async function sendMessageToBot(msg) {
+  appendMessage("You", msg);
+  try {
+    const res = await fetch("{% url 'chatbot_reply' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({ message: msg })
+    });
+    const data = await res.json();
+    appendMessage("AI", data.reply || "No reply");
+  } catch (err) {
+    appendMessage("AI", "Error contacting server.");
+    console.error(err);
+  }
+}
+
+sendBtn.addEventListener("click", () => {
+  const txt = input.value.trim();
+  if (!txt) return;
+  sendMessageToBot(txt);
+  input.value = "";
+});
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendBtn.click();
+  }
+});
   </script>
 </body>
 </html>

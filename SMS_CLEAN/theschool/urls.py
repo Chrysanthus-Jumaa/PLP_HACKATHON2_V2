@@ -51,4 +51,8 @@ urlpatterns = [
 
     # Teacher Actions
     path('record_attendance/', views.record_attendance, name='record_attendance'),
+
+    # Chatbot
+      path("admin/dashboard/", views.dashboard, name="admin_dashboard"),
+    path("admin/chatbot-reply/", views.chatbot_reply, name="chatbot_reply"),
 ]
