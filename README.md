@@ -253,5 +253,5 @@ For questions, integration help, or roadmap discussions, reach out to:
 **Chrysanthus Jumaa**  
 📧 _[chrysanthusjumaa@gmail.com]_
 
-**Calvin Wanderi** 
+**Calvin Wanderi**  
 📧 _[calvinwanderi10260@gmail.com]_
