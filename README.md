@@ -1,143 +1,257 @@
 # ElimuDigital 📚  
-**Enhancing Educational Productivity Technology**
+**Enhancing educational productivity through technology**
 
 ElimuDigital is a school digitization platform designed to streamline administrative workflows, improve data visibility, and support scalable education infrastructure across Kenyan institutions. Built with Django and SQLite, it currently supports multi-role access for super admins, school admins, and teachers.
 
 ---
 
+## 📚 Table of Contents
+
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#️-project-structure)
+- [Setup Instructions](#-setup-instructions)
+- [User Roles & Access](#-user-roles--access)
+- [Implemented Features](#-implemented-features)
+- [Screenshots](#-screenshots)
+- [AI Integration](#-ai-integration)
+- [Known Limitations](#️-known-limitations)
+- [Future Roadmap](#-future-roadmap)
+- [Subscription Model](#-subscription-model)
+- [Data Flow Overview](#-data-flow-overview)
+- [Deployment Status](#-deployment-status)
+- [Licensing](#-licensing)
+- [Contributors](#-contributors)
+- [Contact & Support](#-contact--support)
+
+---
+
 ## 🧰 Tech Stack
 
-- **Backend**: Python 3.x, Django
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Database**: SQLite (default for local setup)
-- **Static Assets**: Organized under `/static/css` and `/media/`
+- **Backend**: Python 3.x, Django  
+- **Frontend**: HTML5, CSS3, JavaScript  
+- **Database**: SQLite (default for local setup)  
+- **Static Assets**: `/static/css/`, `/media/`  
 - **Templating**: Django Templates (`/templates/`)
 
 ---
 
 ## 🗂️ Project Structure
 
-SMS_CLEAN/ ├── SMS_CLEAN/ # Core Django project │ └── settings.py, urls.py, wsgi.py, etc. ├── theschool/ # Main app with models, views, utils │ └── models.py, views.py, urls.py, utils.py ├── templates/ # HTML templates (admin, teacher, parent) ├── static/ # CSS and media assets ├── media/ # Uploaded profile photos └── manage.py
+```plaintext
+README.md
+
+SMS_CLEAN/
+├── db.sqlite3
+├── manage.py
+│
+├── media/
+│   ├── staff_photos/
+│   ├── student_photos/
+│   └── teacher_photos/
+│
+├── SMS_CLEAN/
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── __init__.py
+│   └── __pycache__/
+│
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── media/
+│
+├── templates/
+│   ├── *.html
+│   └── school_admin/
+│       ├── add_student.html
+│       ├── add_teacher.html
+│       └── ...
+│
+└── theschool/
+    ├── *.py
+    ├── migrations/
+    ├── templatetags/
+    └── __pycache__/
+```
 
 ---
 
 ## 🚀 Setup Instructions
 
-1. **Clone the project**  
-   ```bash
-   git clone <repo-url>
-   cd SMS_CLEAN
+### Clone the project
+```bash
+git clone <repo-url>
+cd SMS_CLEAN
+```
 
-2. Install Django
+### Install Django
+```bash
 pip install django
+```
 
-3. Run the server
+### Run migrations
+```bash
+python manage.py migrate
+```
+
+### Create superuser
+```bash
+python manage.py createsuperuser
+```
+
+### Start the server
+```bash
 python manage.py runserver
+```
 
-4. Access the app
-Visit http://127.0.0.1:8000 in your browser.
+### Access the app
+Visit [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
-🔐 User Roles & Access
-👑 Super Admin
-Registers schools
+---
 
-Manages platform settings and users
+## 🔐 User Roles & Access
 
-Views global metrics and fee compliance
+### 👑 Super Admin
+- Registers schools  
+- Manages platform settings and users  
+- Views global metrics and fee compliance  
 
-Dummy Credentials
+**Dummy Credentials**  
+- Username: `PRIMUS`  
+- Password: `optimusprime`
 
-Username: PRIMUS
+### 🏫 School Admin
+- Manages students, teachers, and support staff  
+- Records fees and monitors attendance  
+- Accesses school-level dashboards  
 
-Password: optimusprime
+**Dummy Credentials**  
+- Username: `admin`  
+- Password: `admin1`
 
-🏫 School Admin
-Manages students, teachers, and support staff
+### 👨‍🏫 Teacher
+- Logs in once account is created  
+- Views dashboard, submits lesson plans, records attendance  
+> _Note: Teacher-side logic is partially implemented. Login flow pending._
 
-Records fees and monitors attendance
+---
 
-Accesses school-level dashboards
+## ✅ Implemented Features
 
-Dummy Credentials
+- Student registration and management  
+- Teacher registration and management  
+- Support staff registration and management  
+- Auto-ID generation for students, teachers, and staff  
+- Attendance recording and weekly summaries  
+- Fee recording and SMS notifications  
+- Role-based dashboards for each user type  
 
-Username: admin
+---
 
-Password: admin1
+## 🖼️ Screenshots
 
-👨‍🏫 Teacher
-Can log in (once user account is created)
+### 🔐 Login Screen
+![Login page](<Screenshot (2399).png>)
 
-Views dashboard, submits lesson plans, records attendance 
-Note: Teacher-side logic is partially implemented. No login flow yet.
+### 🧭 Platform Admin Dashboard
+![Super Admin Dashboard](<Screenshot (2400).png>)
 
-✅ Implemented Features
-Admin Modules
-Student registration and management
+### 🏫 School Admin Dashboard
+![School Admin Dashboard](<Screenshot (2401).png>)
 
-Teacher registration and management
+---
 
-Support staff registration and management
+## 🤖 AI Integration
 
-Auto-ID generation for students, teachers, and staff
+The system includes a placeholder AI module designed to support future analytics and automation. While currently inactive due to lack of training data, it is structured to accommodate:
 
-Attendance recording and weekly summaries
+- Insights on student attendance 
+- Summaries provided based on present school records
+- Various enquiries
 
-Fee recording and SMS notifications
+**To be added:**  
+- Timetable scheduling
+- Fee tracking
+- Linkage to submitted in-system attendance records  
+- Database access under logical restrictions
 
-Role-based dashboards for each user type
+---
 
-🟡 Partially Implemented / In Progress
-Teacher dashboard (lesson plans, attendance form)
+## ⚠️ Known Limitations
 
-Parent dashboard (fee and attendance summary)
+- No student or parent login flows  
+- No payment gateway integration (e.g., M-Pesa, Stripe)  
+- No bulk upload or export features  
+- No mobile responsiveness or PWA setup  
+- No audit logs or in-app notifications  
+- AI module present but inactive due to lack of attendance data  
 
-Fee compliance metrics (no payment gateway yet)
+---
 
-Subscription model (Free, Standard, Premium tiers)
+## 📈 Future Roadmap
 
-Class teacher assignment and role hierarchy
+- Implement teacher-stream-subject assignment logic  
+- Build out fee ledger and receipt generation  
+- Integrate payment gateways for fees and subscriptions  
+- Enforce subscription tiers with feature gating  
+- Expand teacher dashboard with attendance history and messaging  
+- Launch student and parent dashboards once core logic is stable  
+- Activate AI module once attendance data is available  
 
-Messaging and announcements
+---
 
-🤖 AI Integration Placeholder
-This system is designed to accommodate future AI logic for:
+## 💳 Subscription Model
 
-Timetable creation and optimization
+| Tier     | Features                                                                 |
+|----------|--------------------------------------------------------------------------|
+| Free     | Basic student/teacher CRUD, attendance, dashboard                        |
+| Standard | Fee tracking, lesson plans, parent messaging                             |
+| Premium  | Reports, exports, analytics, mobile payment integration (M-Pesa, banks)  |
 
-Teacher-stream-subject scheduling
+---
 
-Conflict resolution and availability tracking
+## 🔄 Data Flow Overview
 
-Note to AI Developer: Models like TeachingAssignment and Stream are flexible and can be extended. No hard constraints have been enforced to allow seamless integration.
+```plaintext
+Class Teacher → Attendance Records → AI Module → Attendance Insights
+```
 
-⚠️ Known Limitations
-No student or parent login flows
+- Teachers submit attendance via dashboard  
+- AI module (once active) analyzes patterns  
+- Insights delivered to admins for intervention or reporting  
 
-No payment gateway integration (M-Pesa, Stripe, etc.)
+---
 
-No bulk upload or export features
+## 🧪 Deployment Status
 
-No mobile responsiveness or PWA setup
+- Currently runs on `localhost` only  
+- No production deployment or cloud hosting configured  
+- No `.env` or environment variable setup required  
 
-No audit logs or in-app notifications
+---
 
-📈 Future Roadmap
-Implement teacher-stream-subject assignment logic
+## 📜 Licensing
 
-Build out fee ledger and receipt generation
+- No license currently applied  
+- Not intended for third-party use or redistribution  
 
-Integrate payment gateways for fees and subscriptions
+---
 
-Enforce subscription tiers with feature gating
+## 👥 Contributors
 
-Expand teacher dashboard with attendance history and messaging
+- **Chrysanthus Jumaa** – GIS Developer & System Architect  
+- **Calvin Wanderi** – AI Developer & Automation Lead 
 
-Launch student and parent dashboards once core logic is stable
+---
 
-👥 Contributors
-Chrysanthus Jumaa – GIS Developer & System Architect
+## 📬 Contact & Support
 
-Calvin Wanderi – AI Developer & Automation Lead (to be filled in)
+For questions, integration help, or roadmap discussions, reach out to:
 
-📬 Contact & Support
-For questions, integration help, or roadmap discussions, reach out to Chrysanthus directly.
+**Chrysanthus Jumaa**  
+📧 _[chrysanthusjumaa@gmail.com]_
+
+**Calvin Wanderi** 
+📧 _[calvinwanderi10260@gmail.com]_
