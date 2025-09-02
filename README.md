@@ -1,7 +1,7 @@
-# ElimuDigital 📚  
+# EduTrack 📚  
 **Enhancing educational productivity through technology**
 
-ElimuDigital is a school digitization platform designed to streamline administrative workflows, improve data visibility, and support scalable education infrastructure across Kenyan institutions. Built with Django and SQLite, it currently supports multi-role access for super admins, school admins, and teachers.
+EduTrack is a school digitization platform designed to streamline administrative workflows, improve data visibility, and support scalable education infrastructure across Kenyan institutions. Built with Django and SQLite, it currently supports multi-role access for super admins, school admins, and teachers.
 
 ---
 
